@@ -9,7 +9,7 @@ class ProductOverviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Shop App")),
-      body: ProductGrid(),
+      body: const ProductGrid(),
     );
   }
 }
