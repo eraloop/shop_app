@@ -24,7 +24,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           PopupMenuButton(
               onSelected: (FilterOptions selectedValue) {
                 setState(() {
-                  if (_showFavoritesOnly) {
+                  if (selectedValue == FilterOptions.Favorites) {
                     _showFavoritesOnly = true;
                   } else {
                     _showFavoritesOnly = false;
