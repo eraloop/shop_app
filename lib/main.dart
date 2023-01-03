@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
       create: ((context) => Products()),
       child: MaterialApp(
           title: 'Shop App',
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
               primarySwatch: Colors.purple,
               accentColor: Colors.deepOrange,
