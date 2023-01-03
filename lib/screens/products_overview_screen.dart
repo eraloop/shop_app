@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_apps/widgets/badge.dart';
 import 'package:provider/provider.dart';
 
 import "../providers/product.dart";
 import '../widgets/product_grid.dart';
 import '../providers/products.dart';
+import '../providers/cart.dart';
 
 enum FilterOptions { Favorites, All }
 
@@ -40,8 +42,8 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                     const PopupMenuItem(
                       child: Text("Show All"),
                       value: FilterOptions.All,
-                    )
-                  ])
+                    ),
+                  ]),
         ],
       ),
       body: ProductGrid(_showFavoritesOnly),
