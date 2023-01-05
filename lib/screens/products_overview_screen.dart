@@ -20,33 +20,45 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Shop App"),
-        actions: <Widget>[
-          PopupMenuButton(
-              onSelected: (FilterOptions selectedValue) {
-                setState(() {
-                  if (selectedValue == FilterOptions.Favorites) {
-                    _showFavoritesOnly = true;
-                  } else {
-                    _showFavoritesOnly = false;
-                  }
-                });
-              },
-              icon: const Icon(Icons.more_vert),
-              itemBuilder: (_) => [
-                    const PopupMenuItem(
-                      child: Text("Only Favorites"),
-                      value: FilterOptions.Favorites,
-                    ),
-                    const PopupMenuItem(
-                      child: Text("Show All"),
-                      value: FilterOptions.All,
-                    ),
-                  ]),
-        ],
-      ),
+      appBar: AppBar(title: const Text("Shop App"), actions: <Widget>[
+        PopupMenuButton(
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.Favorites) {
+                  _showFavoritesOnly = true;
+                } else {
+                  _showFavoritesOnly = false;
+                }
+              });
+            },
+            icon: const Icon(Icons.more_vert),
+            itemBuilder: (_) => [
+                  const PopupMenuItem(
+                    child: Text("Only Favorites"),
+                    value: FilterOptions.Favorites,
+                  ),
+                  const PopupMenuItem(
+                    child: Text("Show All"),
+                    value: FilterOptions.All,
+                  ),
+                ]),
+        Consumer<Cart>(
+            builder: (_, cartaData, ch) => Badge(
+                  color: Colors.black,
+                  value: '2',
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.shopping_cart),
+                  ),
+                ))
+      ]),
       body: ProductGrid(_showFavoritesOnly),
     );
   }
 }
+
+// Badge(
+//             color: Colors.white,
+//             value: '2',
+//             child: IconButton(
+//                 onPressed: () {}, icon: const Icon(Icons.shopping_cart)))
