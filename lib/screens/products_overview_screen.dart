@@ -43,22 +43,17 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                   ),
                 ]),
         Consumer<Cart>(
-            builder: (_, cartaData, ch) => Badge(
-                  color: Colors.black,
-                  value: '2',
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.shopping_cart),
-                  ),
-                ))
+          builder: (_, cartData, ch) => Badge(
+            color: Colors.black,
+            value: cartData.itemCount.toString(),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.shopping_cart),
+            ),
+          ),
+        )
       ]),
       body: ProductGrid(_showFavoritesOnly),
     );
   }
 }
-
-// Badge(
-//             color: Colors.white,
-//             value: '2',
-//             child: IconButton(
-//                 onPressed: () {}, icon: const Icon(Icons.shopping_cart)))
