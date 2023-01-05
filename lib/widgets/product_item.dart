@@ -28,14 +28,14 @@ class ProductItem extends StatelessWidget {
                 onPressed: () {
                   product.toggleFavoriteStatus();
                 },
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               trailing: IconButton(
-                icon: Icon(Icons.shopping_cart),
+                icon: const Icon(Icons.shopping_cart),
                 onPressed: () {
                   cart.addItem(product.id, product.price, product.title);
                 },
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
               )),
           child: GestureDetector(
             onTap: () {
