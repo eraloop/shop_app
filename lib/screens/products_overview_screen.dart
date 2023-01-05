@@ -6,6 +6,7 @@ import "../providers/product.dart";
 import '../widgets/product_grid.dart';
 import '../providers/products.dart';
 import '../providers/cart.dart';
+import './cart_screen.dart';
 
 enum FilterOptions { Favorites, All }
 
@@ -47,7 +48,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
             color: Colors.black,
             value: cartData.itemCount.toString(),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
               icon: const Icon(Icons.shopping_cart),
             ),
           ),

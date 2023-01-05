@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_apps/providers/products.dart';
+import 'package:flutter_apps/screens/cart_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/products_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import './providers/cart.dart';
+import './screens/cart_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,12 +29,14 @@ class MyApp extends StatelessWidget {
           title: 'Shop App',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-              primarySwatch: Colors.purple,
-              accentColor: Colors.deepOrange,
-              fontFamily: 'Lato'),
+            fontFamily: 'Lato',
+            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
+                .copyWith(secondary: Colors.deepOrange),
+          ),
           home: ProductOverviewScreen(),
           routes: {
-            ProductDetailScreen.routeName: (ctx) => ProductDetailScreen()
+            ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+            CartScreen.routeName: (ctx) => CartScreen()
           }),
     );
   }
