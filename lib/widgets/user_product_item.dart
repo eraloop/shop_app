@@ -1,6 +1,3 @@
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
 import 'package:flutter/material.dart';
 
 class UserProductItem extends StatelessWidget {
@@ -13,7 +10,26 @@ class UserProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(title),
-      leading: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(imageUrl),
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.edit,
+                color: Theme.of(context).primaryColor,
+              )),
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.delete,
+                color: Theme.of(context).errorColor,
+              ))
+        ],
+      ),
     );
   }
 }
