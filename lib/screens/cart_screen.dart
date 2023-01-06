@@ -32,12 +32,13 @@ class CartScreen extends StatelessWidget {
                       ),
                       const Spacer(),
                       Chip(
-                          label: Text('\$${cart.totalAmount}',
+                          label: Text(
+                              '\$${cart.totalAmount.toStringAsFixed(2)}',
                               style: const TextStyle(color: Colors.white)),
                           backgroundColor: Theme.of(context).primaryColor),
                       ElevatedButton(
                         onPressed: () {
-                          Provider.of<Order>(context, listen: false).addOrdr(
+                          Provider.of<Order>(context, listen: false).addOrder(
                               cart.items.values.toList(), cart.totalAmount);
                           cart.clear();
                         },
