@@ -8,7 +8,7 @@ import '../providers/cart.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    // final product = Provider.of<Product>(context);
     final cart = Provider.of<Cart>(context, listen: false);
 
     return Consumer<Product>(
@@ -34,6 +34,12 @@ class ProductItem extends StatelessWidget {
                 icon: const Icon(Icons.shopping_cart),
                 onPressed: () {
                   cart.addItem(product.id, product.price, product.title);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Added item to card'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
                 },
                 color: Theme.of(context).colorScheme.secondary,
               )),
