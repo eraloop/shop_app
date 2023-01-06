@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../widgets/cart_item.dart';
 import '../providers/cart.dart' show Cart;
+import '../providers/orders.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -35,7 +36,11 @@ class CartScreen extends StatelessWidget {
                               style: const TextStyle(color: Colors.white)),
                           backgroundColor: Theme.of(context).primaryColor),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Provider.of<Order>(context, listen: false).addOrdr(
+                              cart.items.values.toList(), cart.totalAmount);
+                          cart.clear();
+                        },
                         child: Text("ORDER NOW"),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
