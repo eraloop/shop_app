@@ -68,6 +68,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   ),
                   TextFormField(
                     decoration: const InputDecoration(labelText: 'ImageUrl'),
+                    keyboardType: TextInputType.url,
+                    textInputAction: TextInputAction.done,
                   )
                 ],
               )
