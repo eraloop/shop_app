@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../providers/product.dart';
+import '../providers/products.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = './edit_product';
@@ -22,23 +24,54 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _editedProduct =
       Product(id: '', title: '', price: 0, description: '', imageUrl: '');
 
+  var initValues = {
+    'title': '',
+    'description': '',
+    'price': '',
+    'imageUrl': ''
+  };
+
   @override
   void initState() {
-    // TODO: implement initState
     _imageUrlFocusNode.addListener(() {
       _updateImageUrl;
     });
     super.initState();
   }
 
+  var isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      final productId = ModalRoute.of(context)?.settings.arguments as String;
+      _editedProduct =
+          Provider.of<Products>(context, listen: false).findById(productId);
+
+      initValues = {
+        'title': _editedProduct.title,
+        'description': _editedProduct.description,
+        'price': _editedProduct.price.toString(),
+        'imageUrl': ''
+      };
+
+      _imageUrlController.text = _editedProduct.imageUrl;
+    }
+
+    isInit = false;
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
       if (_imageUrlController.text.isEmpty ||
-          (_imageUrlController.text.startsWith('http') &&
-              _imageUrlController.text.startsWith('https')) ||
-          (_imageUrlController.text.endsWith('.png') &&
-              _imageUrlController.text.endsWith('.jpg') &&
-              _imageUrlController.text.endsWith('.jpeg'))) {
+              (_imageUrlController.text.startsWith('http') ||
+                  _imageUrlController.text.startsWith('https'))
+          // (_imageUrlController.text.endsWith('.png') &&
+          //     _imageUrlController.text.endsWith('.jpg') &&
+          //     _imageUrlController.text.endsWith('.jpeg'))
+          ) {
         return;
       }
       setState(() {});
@@ -62,7 +95,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (!isValid) {
       return;
     }
+
     _form.currentState!.save();
+    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
   }
 
   @override
@@ -74,11 +109,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // autovalidateMode: AutovalidateMode.,
           key: _form,
           child: ListView(
             children: <Widget>[
               TextFormField(
+                initialValue: initValues['title'],
                 decoration: const InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (value) {
@@ -102,6 +138,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: initValues['price'],
                 decoration: const InputDecoration(labelText: 'Price'),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
@@ -131,6 +168,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: initValues['description'],
                 decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
@@ -173,6 +211,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      // initialValue: initValues['imageUrl'],
                       decoration: const InputDecoration(labelText: 'ImageUrl'),
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
@@ -180,20 +219,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       focusNode: _imageUrlFocusNode,
                       onFieldSubmitted: (_) {
                         _saveForm();
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please provide a product image link';
-                        }
-                        if (value.startsWith('http') ||
-                            value.startsWith('https')) {
-                          return 'Please enter a valid URL';
-                        }
-                        if (!value.endsWith('.png') && value.endsWith('.jpg') ||
-                            !value.endsWith('.jpeg')) {
-                          return "Please enter a valid image Url";
-                        }
-                        return null;
                       },
                       onSaved: (value) {
                         _editedProduct = Product(
