@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../providers/product.dart';
+
 class EditProductScreen extends StatefulWidget {
   static const routeName = './edit_product';
 
@@ -14,6 +16,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _descriptionFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
+
+  final _form = GlobalKey<FormState>();
+
+  var _editedProduct =
+      Product(id: '', title: '', price: 0, description: '', imageUrl: '');
 
   @override
   void initState() {
@@ -42,6 +49,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.dispose();
   }
 
+  void _saveForm() {
+    _form.currentState!.save();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +62,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
+          key: _form,
           child: ListView(
             children: <Widget>[
               TextFormField(
@@ -58,6 +70,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (value) {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
+                },
+                onSaved: (value) {
+                  _editedProduct = Product(
+                      title: value ?? '',
+                      id: _editedProduct.id,
+                      price: _editedProduct.price,
+                      description: _editedProduct.description,
+                      imageUrl: _editedProduct.imageUrl);
                 },
               ),
               TextFormField(
@@ -101,9 +121,35 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       textInputAction: TextInputAction.done,
                       controller: _imageUrlController,
                       focusNode: _imageUrlFocusNode,
+                      onFieldSubmitted: (_) {
+                        _saveForm();
+                      },
                     ),
                   )
                 ],
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 15.0),
+                child: ElevatedButton(
+                  onPressed: _saveForm,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(Icons.save),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: const Text(
+                          "SAVE PRODUCT",
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               )
             ],
           ),
