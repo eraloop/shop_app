@@ -50,7 +50,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveForm() {
+    final isValid = _form.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
     _form.currentState!.save();
+    print(_editedProduct.title);
+    print(_editedProduct.price);
+    print(_editedProduct.description);
+    print(_editedProduct.imageUrl);
   }
 
   @override
@@ -62,6 +70,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _form,
           child: ListView(
             children: <Widget>[
@@ -70,6 +79,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (value) {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
+                },
+                validator: (value) {
+                  if (value == "") {
+                    return 'Please provide a title';
+                  }
+                  if (value!.length < 3) {
+                    return "Title is too short";
+                  }
                 },
                 onSaved: (value) {
                   _editedProduct = Product(
@@ -88,11 +105,27 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (value) {
                   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 },
+                onSaved: (value) {
+                  _editedProduct = Product(
+                      title: _editedProduct.title,
+                      id: _editedProduct.id,
+                      price: double.parse(value!),
+                      description: _editedProduct.description,
+                      imageUrl: _editedProduct.imageUrl);
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
+                onSaved: (value) {
+                  _editedProduct = Product(
+                      title: _editedProduct.title,
+                      id: _editedProduct.id,
+                      price: _editedProduct.price,
+                      description: value ?? '',
+                      imageUrl: _editedProduct.imageUrl);
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -110,8 +143,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     child: _imageUrlController.text.isEmpty
                         ? const Text('Enter a URL')
                         : FittedBox(
-                            child: Image.network(_imageUrlController.text),
                             fit: BoxFit.cover,
+                            child: Image.network(_imageUrlController.text),
                           ),
                   ),
                   Expanded(
@@ -123,6 +156,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       focusNode: _imageUrlFocusNode,
                       onFieldSubmitted: (_) {
                         _saveForm();
+                      },
+                      onSaved: (value) {
+                        _editedProduct = Product(
+                          title: _editedProduct.title,
+                          id: _editedProduct.id,
+                          price: _editedProduct.price,
+                          description: _editedProduct.description,
+                          imageUrl: value ?? "",
+                        );
                       },
                     ),
                   )
