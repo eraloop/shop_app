@@ -13,12 +13,32 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
+  final _imageUrlFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _imageUrlFocusNode.addListener(() {
+      _updateImageUrl;
+    });
+    super.initState();
+  }
+
+  void _updateImageUrl() {
+    if (!_imageUrlFocusNode.hasFocus) {
+      setState(() {});
+    }
+  }
 
   @override
   void dispose() {
     _priceFocusNode.dispose();
     _descriptionFocusNode.dispose();
     _imageUrlController.dispose();
+    _imageUrlFocusNode.dispose();
+    _imageUrlFocusNode.removeListener(() {
+      _updateImageUrl;
+    });
     super.dispose();
   }
 
@@ -55,6 +75,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 keyboardType: TextInputType.multiline,
               ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Container(
                     width: 100,
@@ -67,17 +88,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       ),
                     ),
                     child: _imageUrlController.text.isEmpty
-                        ? Text('Enter a URL')
+                        ? const Text('Enter a URL')
                         : FittedBox(
                             child: Image.network(_imageUrlController.text),
                             fit: BoxFit.cover,
                           ),
                   ),
-                  TextFormField(
-                    decoration: const InputDecoration(labelText: 'ImageUrl'),
-                    keyboardType: TextInputType.url,
-                    textInputAction: TextInputAction.done,
-                    controller: _imageUrlController,
+                  Expanded(
+                    child: TextFormField(
+                      decoration: const InputDecoration(labelText: 'ImageUrl'),
+                      keyboardType: TextInputType.url,
+                      textInputAction: TextInputAction.done,
+                      controller: _imageUrlController,
+                      focusNode: _imageUrlFocusNode,
+                    ),
                   )
                 ],
               )
