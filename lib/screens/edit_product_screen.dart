@@ -105,6 +105,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (value) {
                   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please provide a product price';
+                  }
+                  if (double.tryParse(value) == null) {
+                    return "Please enter a valid number";
+                  }
+
+                  if (double.parse(value) <= 0) {
+                    return "Product orice can not be \$${0} or less than";
+                  }
+                },
                 onSaved: (value) {
                   _editedProduct = Product(
                       title: _editedProduct.title,
@@ -118,6 +130,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please provide a product description';
+                  }
+                  if (value.length < 10) {
+                    return "Product description can not be below \$${10} characters";
+                  }
+                },
                 onSaved: (value) {
                   _editedProduct = Product(
                       title: _editedProduct.title,
@@ -156,6 +176,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       focusNode: _imageUrlFocusNode,
                       onFieldSubmitted: (_) {
                         _saveForm();
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please provide a product image link';
+                        }
                       },
                       onSaved: (value) {
                         _editedProduct = Product(
