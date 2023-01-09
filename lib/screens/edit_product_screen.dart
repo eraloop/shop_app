@@ -44,7 +44,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void didChangeDependencies() {
     if (isInit) {
-      final productId = ModalRoute.of(context)?.settings.arguments as String;
+      final productId = ModalRoute.of(context)!.settings.arguments as String;
       _editedProduct =
           Provider.of<Products>(context, listen: false).findById(productId);
 
@@ -95,9 +95,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (!isValid) {
       return;
     }
-
     _form.currentState!.save();
-    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+
+    // if (_editedProduct.id != null) {
+    //   Provider.of<Products>(context, listen: false)
+    //       .updateProducts(_editedProduct.id, _editedProduct);
+    // } else {
+    //   Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    // }
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -134,7 +141,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       id: _editedProduct.id,
                       price: _editedProduct.price,
                       description: _editedProduct.description,
-                      imageUrl: _editedProduct.imageUrl);
+                      imageUrl: _editedProduct.imageUrl,
+                      isFavorite: _editedProduct.isFavorite);
                 },
               ),
               TextFormField(
@@ -146,25 +154,26 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (value) {
                   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please provide a product price';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return "Please enter a valid number";
-                  }
+                // validator: (value) {
+                //   if (value!.isEmpty) {
+                //     return 'Please provide a product price';
+                //   }
+                //   if (double.tryParse(value) == null) {
+                //     return "Please enter a valid number";
+                //   }
 
-                  if (double.parse(value) <= 0) {
-                    return "Product orice can not be \$${0} or less than";
-                  }
-                },
+                //   if (double.parse(value) <= 0) {
+                //     return "Product orice can not be \$${0} or less than";
+                //   }
+                // },
                 onSaved: (value) {
                   _editedProduct = Product(
                       title: _editedProduct.title,
                       id: _editedProduct.id,
                       price: double.parse(value!),
                       description: _editedProduct.description,
-                      imageUrl: _editedProduct.imageUrl);
+                      imageUrl: _editedProduct.imageUrl,
+                      isFavorite: _editedProduct.isFavorite);
                 },
               ),
               TextFormField(
@@ -172,21 +181,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please provide a product description';
-                  }
-                  if (value.length < 10) {
-                    return "Product description can not be below \$${10} characters";
-                  }
-                },
+                // validator: (value) {
+                //   if (value == null) {
+                //     return 'Please provide a product description';
+                //   }
+                //   if (value.length < 10) {
+                //     return "Product description can not be below \$${10} characters";
+                //   }
+                // },
                 onSaved: (value) {
                   _editedProduct = Product(
                       title: _editedProduct.title,
                       id: _editedProduct.id,
                       price: _editedProduct.price,
                       description: value ?? '',
-                      imageUrl: _editedProduct.imageUrl);
+                      imageUrl: _editedProduct.imageUrl,
+                      isFavorite: _editedProduct.isFavorite);
                 },
               ),
               Row(
@@ -222,12 +232,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       },
                       onSaved: (value) {
                         _editedProduct = Product(
-                          title: _editedProduct.title,
-                          id: _editedProduct.id,
-                          price: _editedProduct.price,
-                          description: _editedProduct.description,
-                          imageUrl: value ?? "",
-                        );
+                            title: _editedProduct.title,
+                            id: _editedProduct.id,
+                            price: _editedProduct.price,
+                            description: _editedProduct.description,
+                            imageUrl: value ?? "",
+                            isFavorite: _editedProduct.isFavorite);
                       },
                     ),
                   )
