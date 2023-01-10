@@ -41,19 +41,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   var isInit = true;
 
-  var pageTitle = '';
-  var productId = '';
+  var pageTitle = 'Add Product';
 
   @override
   void didChangeDependencies() {
     if (isInit) {
-      pageTitle = ModalRoute.of(context)?.settings.arguments as String;
+      // pageTitle = ModalRoute.of(context)?.settings.arguments as String;
 
-      if (pageTitle != 'Add Product') {
+      final productId = ModalRoute.of(context)!.settings.arguments.toString();
+
+      print(productId);
+
+      if (productId != null) {
         pageTitle = "Edit Product";
       }
-
-      productId = ModalRoute.of(context)?.settings.arguments as String;
 
       if (productId != null && productId != '') {
         _editedProduct =
@@ -75,23 +76,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.didChangeDependencies();
   }
 
-  void _updateImageUrl() {
-    if (!_imageUrlFocusNode.hasFocus) {
-      if (_imageUrlController.text.isEmpty ||
-              (_imageUrlController.text.startsWith('http') ||
-                  _imageUrlController.text.startsWith('https'))
-          // (_imageUrlController.text.endsWith('.png') &&
-          //     _imageUrlController.text.endsWith('.jpg') &&
-          //     _imageUrlController.text.endsWith('.jpeg'))
-          ) {
-        return;
-      }
-      setState(() {});
-    }
-
-    Navigator.of(context).pop();
-  }
-
   @override
   void dispose() {
     _priceFocusNode.dispose();
@@ -111,11 +95,28 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
     _form.currentState!.save();
 
-    if (_editedProduct.id.isEmpty) {
+    if (_editedProduct.id != null || _editedProduct.id != '') {
       Provider.of<Products>(context, listen: false)
           .updateProducts(_editedProduct.id, _editedProduct);
     } else {
       Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    }
+
+    Navigator.of(context).pop();
+  }
+
+  void _updateImageUrl() {
+    if (!_imageUrlFocusNode.hasFocus) {
+      if (_imageUrlController.text == '' ||
+              (_imageUrlController.text.startsWith('http') ||
+                  _imageUrlController.text.startsWith('https'))
+          // (_imageUrlController.text.endsWith('.png') &&
+          //     _imageUrlController.text.endsWith('.jpg') &&
+          //     _imageUrlController.text.endsWith('.jpeg'))
+          ) {
+        return;
+      }
+      // setState(() {});
     }
 
     Navigator.of(context).pop();
@@ -168,18 +169,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (value) {
                   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please provide a product price';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return "Please enter a valid number";
-                  }
+                // validator: (value) {
+                //   if (value!.isEmpty) {
+                //     return 'Please provide a product price';
+                //   }
+                //   if (double.tryParse(value) == null) {
+                //     return "Please enter a valid number";
+                //   }
 
-                  if (double.parse(value) <= 0) {
-                    return "Product orice can not be \$${0} or less than";
-                  }
-                },
+                //   if (double.parse(value) <= 0) {
+                //     return "Product orice can not be \$${0} or less than";
+                //   }
+                // },
                 onSaved: (value) {
                   _editedProduct = Product(
                       title: _editedProduct.title,
@@ -226,7 +227,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         color: Colors.grey,
                       ),
                     ),
-                    child: _imageUrlController.text.isEmpty
+                    child: _imageUrlController.text == ''
                         ? const Text('Enter a URL')
                         : FittedBox(
                             fit: BoxFit.cover,
