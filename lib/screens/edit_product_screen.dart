@@ -41,12 +41,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   var isInit = true;
 
+  var pageTitle = '';
+  var productId = '';
+
   @override
   void didChangeDependencies() {
     if (isInit) {
-      final productId = ModalRoute.of(context)?.settings.arguments as String;
+      pageTitle = ModalRoute.of(context)?.settings.arguments as String;
 
-      if (productId == null) {
+      if (pageTitle != 'Add Product') {
+        pageTitle = "Edit Product";
+      }
+
+      productId = ModalRoute.of(context)?.settings.arguments as String;
+
+      if (productId != null && productId != '') {
         _editedProduct =
             Provider.of<Products>(context, listen: false).findById(productId);
 
@@ -79,6 +88,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
       }
       setState(() {});
     }
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -100,12 +111,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
     _form.currentState!.save();
 
-    // if (_editedProduct.id != null) {
-    //   Provider.of<Products>(context, listen: false)
-    //       .updateProducts(_editedProduct.id, _editedProduct);
-    // } else {
-    //   Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
-    // }
+    if (_editedProduct.id.isEmpty) {
+      Provider.of<Products>(context, listen: false)
+          .updateProducts(_editedProduct.id, _editedProduct);
+    } else {
+      Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    }
 
     Navigator.of(context).pop();
   }
@@ -114,7 +125,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Product"),
+        title: Text(pageTitle),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

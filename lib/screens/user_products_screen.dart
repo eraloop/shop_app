@@ -9,6 +9,8 @@ import './edit_product_screen.dart';
 class UserProductsScreen extends StatelessWidget {
   const UserProductsScreen({super.key});
 
+  final title = 'Add Product';
+
   static const routeName = '/user_product';
 
   @override
@@ -21,7 +23,8 @@ class UserProductsScreen extends StatelessWidget {
         actions: <Widget>[
           IconButton(
               onPressed: () {
-                Navigator.of(context).pushNamed(EditProductScreen.routeName);
+                Navigator.of(context)
+                    .pushNamed(EditProductScreen.routeName, arguments: title);
               },
               icon: const Icon(Icons.add))
         ],

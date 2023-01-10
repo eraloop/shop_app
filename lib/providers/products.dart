@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'product.dart';
 
@@ -70,10 +69,7 @@ class Products with ChangeNotifier {
     );
 
     _items.insert(0, newProduct);
-    print("item inserted");
-    print(_items);
     notifyListeners();
-    print("notifyuListener called");
   }
 
   void updateProducts(String id, Product newProduct) {
